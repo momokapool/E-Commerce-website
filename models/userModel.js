@@ -18,7 +18,24 @@ var userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    role: {
+        type: String,
+        default: "user"
+    },
+    isBlocked: {
+        type: Boolean,
+        default: false
+    },
+
+    cart: {
+        type: Array,
+        default: []
+    },
+    address: [{type: mongoose.Schema.Types.ObjectId, ref: "Address"}],
+    wishlist: [{type: mongoose.Schema.Types.ObjectId, ref: "Product"}]
+},{
+    timestamps: true  //Saves createdAt and updatedAt as dates. Creates 
 })
 
 userSchema.pre("save", async function (next) {
