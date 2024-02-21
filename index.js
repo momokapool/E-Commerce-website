@@ -7,15 +7,19 @@ const dbconnect = require('./config/dbconnect')
 const authRoute = require('./routes/authRoute')
 const {notFound, errorHandler} = require('./middleware/errorHandler')
 const cookieParser = require('cookie-parser')
+const productRoute = require('./routes/productRoute')
+const morgan = require('morgan')
 
 
 dbconnect();
 
+app.use(morgan("dev"))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser())
 
 app.use("/api/user", authRoute)
+app.use("/api/product", productRoute)
 
 app.use(notFound)
 app.use(errorHandler)

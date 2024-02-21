@@ -19,8 +19,9 @@ const createUser = asyncHandler(async (req, res) => {
 
 const loginUserCtrl = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    const findUser = await User.findOne({ 'email': email });
-    if (findUser && (await findUser.isPasswordMatched(password))) {
+    const findUser = await User.findOne({ email });
+    
+    if (findUser && (await findUser.password == password)) {
         const refreshToken = await generateRefreshToken(findUser?._id)
         const updateLoginuser = await User.findByIdAndUpdate(findUser.id, {
             refreshToken: refreshToken
@@ -161,8 +162,23 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
     }
 })
 
+const updatePassword = asyncHandler(async(req, res) => {
+    const {_id} = req.user;
+    const {password} = req.body
+    validateMongo(_id)
+    const user = await User.findById(_id)
+
+    if (password) {
+        user.password = password
+        const updatePassword = await user.save()
+        res.json(updatePassword)
+    }  else {
+        res.json(user)
+    }
+})
 
 
 
-module.exports = { createUser, loginUserCtrl, getAllUser, getSingleUser, deleteUser, updateUser, blockUser, unblockUser, handleRefreshToken, logout }
+
+module.exports = { createUser, loginUserCtrl, getAllUser, getSingleUser, deleteUser, updateUser, blockUser, unblockUser, handleRefreshToken, logout, updatePassword}
 
