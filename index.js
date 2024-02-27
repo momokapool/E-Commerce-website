@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser')
 const productRoute = require('./routes/productRoute')
 const blogRoute = require('./routes/blogRoute')
 const categoryRoute = require('./routes/categoryRoute')
+const brandRoute = require('./routes/brandRoute')
 const morgan = require('morgan')
 
 
@@ -24,6 +25,7 @@ app.use("/api/user", authRoute)
 app.use("/api/product", productRoute)
 app.use("/api/blog", blogRoute)
 app.use("/api/category", categoryRoute)
+app.use("/api/brand", brandRoute)
 
 
 app.use(notFound)
