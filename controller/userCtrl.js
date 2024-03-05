@@ -235,7 +235,7 @@ const getWishlist = asyncHandler(async (req, res) => {
 
 const saveAddress = asyncHandler(async (req, res, next) => {
     const { _id } = req.user;
-    validateMongoDbId(_id);
+    validateMongo(_id);
 
     try {
         const updatedUser = await User.findByIdAndUpdate(
@@ -257,7 +257,7 @@ const saveAddress = asyncHandler(async (req, res, next) => {
 const userCart = asyncHandler(async (req, res) => {
     const { cart } = req.body;
     const { _id } = req.user;
-    validateMongoDbId(_id);
+    validateMongo(_id);
     try {
         let products = [];
         const user = await User.findById(_id);
@@ -292,7 +292,7 @@ const userCart = asyncHandler(async (req, res) => {
 
 const getUserCart = asyncHandler(async (req, res) => {
     const { _id } = req.user;
-    validateMongoDbId(_id);
+    validateMongo(_id);
     try {
         const cart = await Cart.findOne({ orderby: _id }).populate(
             "products.product"
@@ -304,8 +304,21 @@ const getUserCart = asyncHandler(async (req, res) => {
 });
 
 
+const emptyCart = asyncHandler(async(req, res) => {
+    const { _id } = req.user;
+    validateMongo(_id)
+
+    try {
+        const user = await User.findOne({_id})
+        const emptycart = Cart.findOneAndDelete({orderby : user._id})
+        res.json(emptycart)
+    } catch (error) {
+        throw new Error(error)
+    }
+})
 
 
 
-module.exports = { createUser, loginUserCtrl, getAllUser, getSingleUser, deleteUser, updateUser, blockUser, unblockUser, handleRefreshToken, logout, updatePassword, loginAdminCtrl, getWishlist, saveAddress, userCart }
+
+module.exports = { createUser, loginUserCtrl, getAllUser, getSingleUser, deleteUser, updateUser, blockUser, unblockUser, handleRefreshToken, logout, updatePassword, loginAdminCtrl, getWishlist, saveAddress, userCart, getUserCart, emptyCart}
 
